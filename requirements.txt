@@ -1,0 +1,24 @@
+# Core audio processing
+librosa>=0.10.0
+numpy>=1.24.0
+soundfile>=0.12.0
+
+# Video & visualisation
+moviepy>=1.0.3
+matplotlib>=3.7.0
+Pillow>=10.0.0
+opencv-python>=4.8.0
+
+# AI Art generation
+diffusers>=0.27.0
+transformers>=4.38.0
+torch>=2.1.0
+huggingface_hub>=0.20.0
+
+# Config & utils
+pyyaml>=6.0
+tqdm>=4.66.0
+click>=8.1.0
+
+# Optional: Gradio UI (M5)
+# gradio>=4.0.0

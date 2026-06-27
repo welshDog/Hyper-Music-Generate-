@@ -1,0 +1,62 @@
+# Hyper Music Generate - Configuration
+# Tweak these to customise your videos!
+
+# Output settings
+output:
+  width: 1080
+  height: 1920
+  fps: 30
+  format: mp4
+  quality: high  # low | medium | high
+
+# HuggingFace settings (for AI art generation)
+huggingface:
+  model: "black-forest-labs/FLUX.1-schnell"  # or stabilityai/stable-diffusion-xl-base-1.0
+  steps: 4
+  guidance_scale: 0.0
+
+# Style presets
+styles:
+  hyperfocus:
+    name: "HyperFocus"
+    bg_color: "#0a0a0a"
+    bar_color: "#00ffff"
+    accent_color: "#ff00ff"
+    font: "assets/fonts/bold.ttf"
+    visualizer_type: "bars"  # bars | waveform | particles
+    bar_count: 64
+    glow: true
+    prompt_prefix: "neon cyberpunk dark abstract music visualizer"
+
+  chillwave:
+    name: "Chill Wave"
+    bg_color: "#1a1a2e"
+    bar_color: "#a8edea"
+    accent_color: "#fed6e3"
+    font: "assets/fonts/bold.ttf"
+    visualizer_type: "waveform"
+    bar_count: 32
+    glow: false
+    prompt_prefix: "soft pastel gradient dreamy lo-fi music aesthetic"
+
+  cyberbro:
+    name: "Cyber Bro"
+    bg_color: "#000000"
+    bar_color: "#39ff14"
+    accent_color: "#ff3131"
+    font: "assets/fonts/bold.ttf"
+    visualizer_type: "bars"
+    bar_count: 128
+    glow: true
+    prompt_prefix: "glitch pixel art retro hacker cyberpunk vibe"
+
+  lyricmode:
+    name: "Lyric Mode"
+    bg_color: "#111111"
+    bar_color: "#ffffff"
+    accent_color: "#f9ca24"
+    font: "assets/fonts/bold.ttf"
+    visualizer_type: "waveform"
+    bar_count: 32
+    glow: false
+    prompt_prefix: "moody cinematic dark concert stage lighting"

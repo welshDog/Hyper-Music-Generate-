@@ -1,0 +1,19 @@
+# Output files
+output/
+__pycache__/
+*.pyc
+*.pyo
+.env
+*.egg-info/
+dist/
+build/
+.DS_Store
+
+# Large model files
+*.safetensors
+*.bin
+*.ckpt
+
+# Temp files
+temp_*
+*.tmp
