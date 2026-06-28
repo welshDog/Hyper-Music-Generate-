@@ -8,19 +8,35 @@
 # Install (CPU-only, no GPU needed)
 pip install -r requirements.txt
 
-# Web UI — drop a song, pick a vibe, render
+# Web UI — two tabs: "From a track" + "Generate from prompt"
 python app.py            # → http://127.0.0.1:7860
 
-# …or the CLI
+# …or the CLI — from an existing track
 python main.py --input input/your_song.mp3 --style hyperfocus
 python main.py --input input/your_song.mp3 --style cyberbro --preview 10   # quick 10s preview
 python main.py --input input/song.mp3 --style lyricmode --lyrics input/song.lrc
 ```
 
+### 🎼 Generate the music too (text → song → video)
+
+```bash
+# One-time: install the AI extras (torch + transformers + MusicGen tokenizer)
+pip install -r requirements-ai.txt
+
+# Type a vibe → AI writes the track → auto-builds the vertical video
+python main.py --prompt "lofi hip hop, chill, mellow piano, rainy night" --style chillwave
+python main.py --prompt "high energy synthwave, driving bass" --duration 15 --style cyberbro
+```
+
+Default music backend is **local & free** (Meta's MusicGen on CPU). The first run
+downloads the model (~2GB, then cached) and CPU generation is slow (minutes for
+~15s). For speed, set `music.backend: api` in `config.yaml` and export `HF_TOKEN`
+(hosted inference — paid).
+
 ## 🏗️ Pipeline
 
 ```
-[Your MP3/WAV]
+[Text prompt] ──(optional: MusicGen)──► [Your MP3/WAV]
     ↓
 [1. Audio Analyzer]   → BPM, beat timestamps, onsets, per-frame spectrum (frame_bars)
     ↓
@@ -77,6 +93,7 @@ Hyper-Music-Generate/
 ├── main.py            → CLI pipeline
 ├── config.yaml        → Style presets & settings
 ├── modules/
+│   ├── music_generator.py  → text → music (MusicGen local/API)
 │   ├── audio_analyzer.py   → BPM / beats / onsets / spectrum
 │   ├── render_engine.py    → per-frame compositor (the spine)
 │   ├── art_generator.py    → procedural animated backgrounds
@@ -95,6 +112,7 @@ Hyper-Music-Generate/
 - [x] M3 — Fast Pillow/numpy visualizer (bars/waveform/radial/particles + glow)
 - [x] M4 — Animated title card + karaoke lyric sync
 - [x] M5 — Render-engine compositor + Gradio web UI
+- [x] M6 — Real text → music generation (MusicGen, local-free / API)
 
 ---
 Built with 💜 by WelshDog | Hyperfocus Zone

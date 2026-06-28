@@ -1,7 +1,10 @@
-# Optional: GPU/API AI-art backgrounds (diffusion path).
-# Only needed when config.yaml has `huggingface.enabled: true`.
-# These are heavy (multi-GB) — the base pipeline is fully CPU-only without them.
-diffusers>=0.27.0
-transformers>=4.38.0
+# Optional heavy deps — install only when you want real AI features:
+#   - text → music generation (config: music.backend = local)   → torch, transformers, sentencepiece
+#   - AI-art backgrounds       (config: huggingface.enabled)     → diffusers, torch
+# CPU-only is fine (the base pipeline needs none of these):
+#   pip install -r requirements-ai.txt
 torch>=2.1.0
+transformers>=4.38.0
+sentencepiece>=0.1.99     # MusicGen's T5 text tokenizer
+diffusers>=0.27.0
 huggingface_hub>=0.20.0

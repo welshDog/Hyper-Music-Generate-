@@ -28,8 +28,29 @@ def load_config(config_path="config.yaml"):
         return yaml.safe_load(f)
 
 
-def run(input_path, style_name="hyperfocus", title="", artist="WelshDog",
-        lyrics="", preview=None, output_dir="output"):
+def generate_track(prompt, duration=None, output_dir="output"):
+    """Text → music: generate a track from a prompt and return its path."""
+    from modules.music_generator import generate_music  # lazy: heavy ML import
+
+    config = load_config()
+    music_cfg = config.get("music", {})
+    duration = duration or music_cfg.get("duration", 12)
+    os.makedirs(output_dir, exist_ok=True)
+    out_wav = os.path.join(output_dir, "generated_song.wav")
+    return generate_music(prompt, duration, out_wav, music_cfg)
+
+
+def run(input_path=None, style_name="hyperfocus", title="", artist="WelshDog",
+        lyrics="", preview=None, output_dir="output", prompt="", duration=None):
+    # Text → music: if a prompt is given, generate the track first.
+    if prompt:
+        print(f"\n🎼 Generating music from prompt...")
+        input_path = generate_track(prompt, duration, output_dir)
+        if not title:
+            title = prompt[:40]
+    if not input_path:
+        raise ValueError("provide an audio file (input_path) or a text prompt")
+
     config = load_config()
     style = dict(config["styles"].get(style_name, config["styles"]["hyperfocus"]))
     style["_huggingface"] = config.get("huggingface", {})
@@ -64,7 +85,12 @@ def run(input_path, style_name="hyperfocus", title="", artist="WelshDog",
 
 def main():
     parser = argparse.ArgumentParser(description="Hyper Music Generate 🎵")
-    parser.add_argument("--input", required=True, help="Path to your MP3/WAV file")
+    parser.add_argument("--input", help="Path to your MP3/WAV file")
+    parser.add_argument("--prompt", default="",
+                        help="Text → music: generate a track from this description "
+                             "(e.g. \"lofi hip hop, chill, mellow piano\")")
+    parser.add_argument("--duration", type=float, default=None,
+                        help="Seconds of music to generate (with --prompt)")
     parser.add_argument("--style", default="hyperfocus", help="Visual style preset")
     parser.add_argument("--title", default="", help="Song title for overlay")
     parser.add_argument("--artist", default="WelshDog", help="Artist name for overlay")
@@ -73,7 +99,11 @@ def main():
                         help="Render only the first N seconds (fast iteration)")
     args = parser.parse_args()
 
-    run(args.input, args.style, args.title, args.artist, args.lyrics, args.preview)
+    if not args.input and not args.prompt:
+        parser.error("provide --input <file> or --prompt <text>")
+
+    run(args.input, args.style, args.title, args.artist, args.lyrics,
+        args.preview, prompt=args.prompt, duration=args.duration)
 
 
 if __name__ == "__main__":

@@ -9,6 +9,17 @@ output:
   format: mp4
   quality: high  # low | medium | high
 
+# Text → music generation (the "Generate" in Hyper Music Generate).
+# Default backend is local & free (Meta MusicGen on CPU). First run downloads
+# ~2GB; CPU generation is slow (minutes for ~15s). Needs requirements-ai.txt.
+music:
+  backend: "local"                 # local (free, CPU) | api (fast, paid, needs HF_TOKEN)
+  model: "facebook/musicgen-small" # -small | -medium | -large (bigger = slower)
+  duration: 12                     # seconds of music to generate
+  api:
+    provider: "huggingface"
+    model: "facebook/musicgen-small"
+
 # HuggingFace / diffusion settings (OPTIONAL AI-art backgrounds).
 # Off by default — backgrounds are procedural & CPU-only. Flip `enabled: true`
 # only when running with a GPU or a configured inference API (heavy deps live
