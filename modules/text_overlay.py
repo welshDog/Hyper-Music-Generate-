@@ -48,6 +48,25 @@ def _text_w(draw: ImageDraw.ImageDraw, text: str, font) -> int:
     return box[2] - box[0]
 
 
+_MARGIN = 80  # keep text this many px clear of each frame edge
+
+
+def _fit_font(font_path: str, text: str, max_size: int,
+              max_width: int = WIDTH - 2 * _MARGIN, min_size: int = 26):
+    """Largest font (≤ max_size) at which `text` fits within max_width."""
+    size = max_size
+    while size > min_size:
+        font = _load_font(font_path, size)
+        try:
+            w = font.getlength(text)
+        except AttributeError:               # very old Pillow
+            w = font.getbbox(text)[2]
+        if w <= max_width:
+            return font
+        size -= 4
+    return _load_font(font_path, min_size)
+
+
 def _draw_centered(draw, text, y, font, fill, shadow=(0, 0, 0, 180)):
     w = _text_w(draw, text, font)
     x = (WIDTH - w) // 2
@@ -108,10 +127,9 @@ def make_text_layer(style: dict, title: str, artist: str, lyrics_file: str, audi
     duration = audio_data.get("duration", 0.0)
     beat_times = audio_data.get("beat_times", [])
 
-    title_font = _load_font(font_path, 78)
+    # Title is constant per render, so size it to fit once; artist is short.
+    title_font = _fit_font(font_path, title, 78) if title else _load_font(font_path, 78)
     artist_font = _load_font(font_path, 46)
-    lyric_font = _load_font(font_path, 64)
-    lyric_small = _load_font(font_path, 40)
 
     lyrics = _parse_lyrics(lyrics_file, beat_times, duration)
     if lyrics:
@@ -141,14 +159,17 @@ def make_text_layer(style: dict, title: str, artist: str, lyrics_file: str, audi
                 _draw_centered(d, f"— {artist} —", 250 + slide, artist_font,
                                (230, 230, 230, alpha))
 
-        # --- Karaoke lyrics ---
+        # --- Karaoke lyrics (fit each line to the frame width) ---
         if lyrics:
             i = _current_line(lyrics, t)
             if i >= 0:
                 cy = int(HEIGHT * 0.82)
-                _draw_centered(d, lyrics[i][1], cy, lyric_font, _rgba(accent, 255))
+                _draw_centered(d, lyrics[i][1], cy,
+                               _fit_font(font_path, lyrics[i][1], 64),
+                               _rgba(accent, 255))
                 if i + 1 < len(lyrics):
-                    _draw_centered(d, lyrics[i + 1][1], cy + 90, lyric_small,
+                    _draw_centered(d, lyrics[i + 1][1], cy + 90,
+                                   _fit_font(font_path, lyrics[i + 1][1], 40),
                                    (200, 200, 200, 120))
         return layer
 
