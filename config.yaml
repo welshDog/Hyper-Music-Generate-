@@ -9,8 +9,12 @@ output:
   format: mp4
   quality: high  # low | medium | high
 
-# HuggingFace settings (for AI art generation)
+# HuggingFace / diffusion settings (OPTIONAL AI-art backgrounds).
+# Off by default — backgrounds are procedural & CPU-only. Flip `enabled: true`
+# only when running with a GPU or a configured inference API (heavy deps live
+# in requirements-ai.txt).
 huggingface:
+  enabled: false
   model: "black-forest-labs/FLUX.1-schnell"  # or stabilityai/stable-diffusion-xl-base-1.0
   steps: 4
   guidance_scale: 0.0
@@ -23,8 +27,10 @@ styles:
     bar_color: "#00ffff"
     accent_color: "#ff00ff"
     font: "assets/fonts/bold.ttf"
-    visualizer_type: "bars"  # bars | waveform | particles
+    visualizer_type: "bars"   # bars | waveform | radial | particles
+    bg_type: "plasma"         # plasma | flow | mesh | gradient
     bar_count: 64
+    mirror: true              # mirror bars around the centre
     glow: true
     prompt_prefix: "neon cyberpunk dark abstract music visualizer"
 
@@ -35,7 +41,9 @@ styles:
     accent_color: "#fed6e3"
     font: "assets/fonts/bold.ttf"
     visualizer_type: "waveform"
+    bg_type: "flow"
     bar_count: 32
+    mirror: false
     glow: false
     prompt_prefix: "soft pastel gradient dreamy lo-fi music aesthetic"
 
@@ -45,8 +53,10 @@ styles:
     bar_color: "#39ff14"
     accent_color: "#ff3131"
     font: "assets/fonts/bold.ttf"
-    visualizer_type: "bars"
-    bar_count: 128
+    visualizer_type: "radial"
+    bg_type: "mesh"
+    bar_count: 96
+    mirror: false
     glow: true
     prompt_prefix: "glitch pixel art retro hacker cyberpunk vibe"
 
@@ -57,6 +67,8 @@ styles:
     accent_color: "#f9ca24"
     font: "assets/fonts/bold.ttf"
     visualizer_type: "waveform"
+    bg_type: "gradient"
     bar_count: 32
+    mirror: false
     glow: false
     prompt_prefix: "moody cinematic dark concert stage lighting"

@@ -30,6 +30,7 @@ def analyze_audio(audio_path: str, output_dir: str = "output") -> dict:
 
     # --- BPM & Beat Tracking ---
     bpm, beat_frames = librosa.beat.beat_track(y=y, sr=sr)
+    bpm = float(np.asarray(bpm).reshape(-1)[0])  # newer librosa returns an array
     beat_times = librosa.frames_to_time(beat_frames, sr=sr).tolist()
 
     # --- Onset Detection (note starts, hits) ---

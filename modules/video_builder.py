@@ -12,27 +12,34 @@ def build_video(
     overlay_path: str,
     audio_path: str,
     style: dict,
-    output_dir: str = "output"
+    output_dir: str = "output",
+    max_duration: float = None,
 ) -> str:
     """
     Combine visualizer video + original audio into final TikTok-ready MP4.
-    
+
+    When `max_duration` is set (preview mode) the audio is trimmed to the
+    rendered video length instead of looping the video to the full song.
+
     Returns:
         Path to the final output video
     """
     output_path = os.path.join(output_dir, "tiktok_ready.mp4")
-    
+
     print(f"    Combining video + audio...")
-    
+
     video = VideoFileClip(overlay_path)
     audio = AudioFileClip(audio_path)
-    
-    # Match video duration to audio
-    if video.duration < audio.duration:
+
+    if max_duration:
+        target = min(video.duration, audio.duration, float(max_duration))
+        video = video.subclip(0, target)
+        audio = audio.subclip(0, target)
+    elif video.duration < audio.duration:
         video = video.loop(duration=audio.duration)
     else:
         video = video.subclip(0, audio.duration)
-    
+
     final = video.set_audio(audio)
     
     final.write_videofile(

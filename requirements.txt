@@ -3,22 +3,20 @@ librosa>=0.10.0
 numpy>=1.24.0
 soundfile>=0.12.0
 
-# Video & visualisation
-moviepy>=1.0.3
-matplotlib>=3.7.0
+# Video & visualisation (procedural, CPU-only — no GPU needed)
+moviepy>=1.0.3,<2          # 1.x .editor API (.subclip/.set_audio/.loop)
+matplotlib>=3.7.0        # used for the waveform preview + guaranteed font fallback
 Pillow>=10.0.0
 opencv-python>=4.8.0
-
-# AI Art generation
-diffusers>=0.27.0
-transformers>=4.38.0
-torch>=2.1.0
-huggingface_hub>=0.20.0
 
 # Config & utils
 pyyaml>=6.0
 tqdm>=4.66.0
 click>=8.1.0
 
-# Optional: Gradio UI (M5)
-# gradio>=4.0.0
+# Web UI
+gradio>=4.0.0
+
+# Optional AI-art backgrounds (GPU/API) live in requirements-ai.txt — install
+# only if you set huggingface.enabled: true in config.yaml:
+#   pip install -r requirements-ai.txt
